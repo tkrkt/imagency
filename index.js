@@ -1,18 +1,45 @@
-const plugins = {
-  uiflow: require('./plugins/uiflow'),
-  webshot: require('./plugins/webshot')
-};
+'use strict';
+
+const plugins = require('./plugins');
+const parseJSON = require('./services/parseJSON');
+
+Object.keys(plugins).forEach(name => {
+  plugins[name].generator = require(plugins[name].path);
+});
 
 require('http').createServer(function(req, res) {
-  const [_, generator, ...encodedURIs] = req.url.split('/');
-  if (!generator || !encodedURIs) {
+  const urls = req.url.split('/');
+  if (urls.length < 3) {
     res.writeHead(404);
     res.end();
     return;
   }
-  const code = decodeURI(encodedURIs.join('/')).trim();
-  if (plugins[generator]) {
-    plugins[generator].generate(req, res, code);
+
+  const generatorName = urls[1];
+  const code = decodeURI(urls.slice(2).join('/')).trim();
+
+  const plugin = plugins[generatorName];
+
+  // FIXME if-else hell
+  if (plugin && plugin.generator) {
+    const generator = plugin.generator;
+    if (generator.contentType) {
+      res.writeHead(200, {
+        'Content-Type': generator.contentType,
+        'Content-disposition': `attachment; filename=${generatorName}.png`
+      });
+    }
+    if (generator.codeType === 'json') {
+      const json = parseJSON(code);
+      if (json) {
+        generator.generate(req, res, parseJSON(code));
+      } else {
+        res.writeHead(404);
+        res.end();
+      }
+    } else {
+      generator.generate(req, res, code);
+    }
   } else {
     res.writeHead(404);
     res.end();
