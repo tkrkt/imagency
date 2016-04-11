@@ -1,30 +1,22 @@
-const webshot = require('webshot');
+'use strict';
 
-const createHtml = (code) => `
-<code style="display:block;">${code}</code>
-<code id="result">=> </code>
-<script>
-var result;
-try{
-  result = eval("${code}");
-}catch(e){
-  result = e;
-}
-var c = document.getElementById('result').textContent += result;
-</script>
-`;
+const vm = require('vm');
+const svg = require('../services/svg');
 
 module.exports = {
-  contentType: 'image/png',
+  contentType: 'image/svg+xml',
   codeType: 'string',
   generate(req, res, code){
-    webshot(createHtml(code), {
-      windowSize: {
-        width: 300,
-        height: 200
-      },
-      renderDelay: 1000,
-      siteType: 'html'
-    }).pipe(res);
+    let result;
+    try {
+      result = vm.runInNewContext(code);
+    } catch(e) {
+      result = 'invalid';
+    }
+
+    res.write(svg.text({
+      text: `${code} => ${result}`
+    }));
+    res.end();
   }
 };
