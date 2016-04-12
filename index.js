@@ -1,5 +1,6 @@
 'use strict';
 
+const text2png = require('text2png');
 const plugins = require('./plugins');
 const parseJSON = require('./services/parseJSON');
 
@@ -34,14 +35,22 @@ require('http').createServer(function(req, res) {
       if (json) {
         generator.generate(req, res, parseJSON(code));
       } else {
-        res.writeHead(404);
+        res.writeHead(404, {
+          'Content-Type': 'image/png',
+          'Content-disposition': `attachment; filename=${generatorName}.png`
+        });
+        res.write(text2png('ERROR! Invalid JSON', {textColor: 'red'}));
         res.end();
       }
     } else {
       generator.generate(req, res, code);
     }
   } else {
-    res.writeHead(404);
+    res.writeHead(404, {
+      'Content-Type': 'image/png',
+      'Content-disposition': `attachment; filename=${generatorName}.png`
+    });
+    res.write(text2png(`ERROR! generator: ${generatorName} is not found.`, {textColor: 'red'}));
     res.end();
   }
 }).listen(process.env.PORT || 8888, '127.0.0.1');

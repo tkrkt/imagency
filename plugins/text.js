@@ -1,12 +1,13 @@
 'use strict';
 
+const text2png = require('text2png');
 const svg = require('../services/svg');
 
 module.exports = {
-  contentType: 'image/svg+xml',
+  contentType: 'image/png',
   codeType: 'json',
   generate(req, res, json){
-    res.write(svg.text(json));
+    res.write(text2png(json.text, json));
     res.end();
   }
 };
