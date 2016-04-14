@@ -1,5 +1,6 @@
 'use strict';
 
+const version = require('./package.json').version;
 const text2png = require('text2png');
 const plugins = require('./plugins');
 const parseJSON = require('./services/parseJSON');
@@ -11,7 +12,11 @@ Object.keys(plugins).forEach(name => {
 require('http').createServer(function(req, res) {
   const urls = req.url.split('/');
   if (urls.length < 3) {
-    res.writeHead(404);
+    res.writeHead(200, {
+      'Content-Type': 'image/png',
+      'Content-disposition': `attachment; filename=imagency.png`
+    });
+    res.write(text2png(`Imagency version${version}`));
     res.end();
     return;
   }
