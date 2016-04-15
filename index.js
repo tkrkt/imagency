@@ -9,7 +9,7 @@ Object.keys(plugins).forEach(name => {
   plugins[name].generator = require(plugins[name].path);
 });
 
-require('http').createServer(function(req, res) {
+require('http').createServer(function (req, res) {
   const urls = req.url.split('/');
   if (urls.length < 2) {
     res.writeHead(200, {

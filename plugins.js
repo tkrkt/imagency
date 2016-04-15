@@ -5,4 +5,5 @@ module.exports = {
   text: {path: './plugins/text'},
   eval: {path: './plugins/eval'},
   elen: {path: './plugins/elen'}
+  lib: {path: './plugins/lib'},
 };
