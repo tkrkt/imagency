@@ -3,7 +3,7 @@
 const version = require('./package.json').version;
 const text2png = require('text2png');
 const plugins = require('./plugins');
-const parseJSON = require('./services/parseJSON');
+const parseCode = require('./services/parseCode');
 
 Object.keys(plugins).forEach(name => {
   plugins[name].generator = require(plugins[name].path);
@@ -11,22 +11,20 @@ Object.keys(plugins).forEach(name => {
 
 require('http').createServer(function(req, res) {
   const urls = req.url.split('/');
-  if (urls.length < 3) {
+  if (urls.length < 2) {
     res.writeHead(200, {
       'Content-Type': 'image/png',
       'Content-disposition': `attachment; filename=imagency.png`
     });
-    res.write(text2png(`Imagency version${version}`));
+    res.write(text2png(`Hello! imagency @${version}`));
     res.end();
     return;
   }
 
   const generatorName = urls[1];
-  const code = decodeURI(urls.slice(2).join('/')).trim();
-
+  const raw = urls.slice(2).join('/');
   const plugin = plugins[generatorName];
 
-  // FIXME if-else hell
   if (plugin && plugin.generator) {
     const generator = plugin.generator;
     if (generator.contentType) {
@@ -35,20 +33,17 @@ require('http').createServer(function(req, res) {
         'Content-disposition': `attachment; filename=${generatorName}.png`
       });
     }
-    if (generator.codeType === 'json') {
-      const json = parseJSON(code);
-      if (json) {
-        generator.generate(req, res, parseJSON(code));
-      } else {
-        res.writeHead(404, {
-          'Content-Type': 'image/png',
-          'Content-disposition': `attachment; filename=${generatorName}.png`
-        });
-        res.write(text2png('ERROR! Invalid JSON', {textColor: 'red'}));
-        res.end();
-      }
-    } else {
+
+    try {
+      const code = parseCode[generator.codeType](raw);
       generator.generate(req, res, code);
+    } catch (e) {
+      res.writeHead(400, {
+        'Content-Type': 'image/png',
+        'Content-disposition': 'attachment; filename=error.png'
+      });
+      res.write(text2png(e.toString(), {textColor: 'red'}));
+      res.end();
     }
   } else {
     res.writeHead(404, {

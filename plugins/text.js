@@ -5,7 +5,7 @@ const svg = require('../services/svg');
 
 module.exports = {
   contentType: 'image/png',
-  codeType: 'json',
+  codeType: 'json/ini',
   generate(req, res, json){
     res.write(text2png(json.text, json));
     res.end();
