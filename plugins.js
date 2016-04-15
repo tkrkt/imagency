@@ -6,4 +6,11 @@ module.exports = {
   eval: {path: './plugins/eval'},
   elen: {path: './plugins/elen'}
   lib: {path: './plugins/lib'},
+  plot: {
+    path: './plugins/plot/plot',
+    lib: {
+      'd3': './plugins/plot/d3.v3.min.js',
+      'function-plot': './plugins/plot/function-plot.js'
+    }
+  }
 };
