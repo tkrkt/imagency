@@ -4,7 +4,7 @@ module.exports = {
   webshot: {path: './plugins/webshot'},
   text: {path: './plugins/text'},
   eval: {path: './plugins/eval'},
-  elen: {path: './plugins/elen'}
+  elen: {path: './plugins/elen/elen'},
   lib: {path: './plugins/lib'},
   plot: {
     path: './plugins/plot/plot',
