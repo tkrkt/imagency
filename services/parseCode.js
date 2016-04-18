@@ -4,7 +4,6 @@ const JSON5 = require('json5');
 
 const decode = (raw) => decodeURI(raw).trim();
 
-// should i use switch?
 module.exports = {
   json: raw => {
     return JSON5.parse(decode(raw)); // throwable
@@ -13,16 +12,18 @@ module.exports = {
     return ini.parse(decode(raw)); //throwable
   },
   'json/ini': raw => {
+    const code = decode(raw).trim();
     try {
-      let json = JSON5.parse(decode(raw));
+      let json = JSON5.parse(code);
       return json;
     } catch (_) {
     }
     try {
-      let ini = ini.parse(decode(raw));
-      return ini;
+      let json = ini.parse(code);
+      return json;
     } catch (_) {
     }
+
     throw new Error('Invalid code');
   },
   string: raw => {
