@@ -7,7 +7,12 @@ module.exports = {
   contentType: 'image/png',
   codeType: 'json/ini',
   generate(req, res, json){
-    res.write(text2png(json.text, json));
-    res.end();
+    if (json.text) {
+      res.write(text2png(json.text, json));
+      res.end();
+    } else {
+      res.writeHead(400);
+      res.end();
+    }
   }
 };
