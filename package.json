@@ -14,7 +14,7 @@
     "json5": "^0.5.0",
     "lodash.get": "^4.2.1",
     "text2png": "^1.0.1",
-    "uiflow": "^1.1.7",
+    "uiflow": "git+https://github.com/tkrkt/uiflow.git#fix-argument-in-compile",
     "viz": "0.0.1",
     "webshot": "^0.18.0"
   }
