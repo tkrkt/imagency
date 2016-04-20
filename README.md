@@ -22,11 +22,19 @@ See [node-canvas wiki](https://github.com/Automattic/node-canvas/wiki) to instal
 Write image tag in your favorite markdown editor:
 
 ```
+![alt](http://127.0.0.1:[PORT]/[PluginName]/[Code])
+```
+
+e.g.
+
+```
 ![alt](http://127.0.0.1:8888/text/
-text=Hello!
+  text=Hello!
 )
 ```
 
-then you can get generated image.
+then you can get generated image in preview pane.
 
 ![](./sample.png)
+
+enjoy!
