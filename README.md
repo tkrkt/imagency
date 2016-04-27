@@ -1,5 +1,8 @@
 # imagency
+
 Dynamic image generator for markdown writing
+
+Article: [Qiita(Japanese)](http://qiita.com/tkrkt/items/f65a4be0cd57235217c9)
 
 ## Quick start
 
